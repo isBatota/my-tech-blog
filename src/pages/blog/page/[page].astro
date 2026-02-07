@@ -1,25 +1,39 @@
 ---
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
-import BaseHead from '../../components/BaseHead.astro';
-import Footer from '../../components/Footer.astro';
-import FormattedDate from '../../components/FormattedDate.astro';
-import Header from '../../components/Header.astro';
-import Pagination from '../../components/Pagination.astro';
-import { BLOG_POSTS_PER_PAGE, SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import BaseHead from '../../../components/BaseHead.astro';
+import Footer from '../../../components/Footer.astro';
+import FormattedDate from '../../../components/FormattedDate.astro';
+import Header from '../../../components/Header.astro';
+import Pagination from '../../../components/Pagination.astro';
+import { BLOG_POSTS_PER_PAGE, SITE_DESCRIPTION, SITE_TITLE } from '../../../consts';
 
+export async function getStaticPaths() {
+	const allPosts = (await getCollection('blog')).sort(
+		(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+	);
+	const totalPages = Math.ceil(allPosts.length / BLOG_POSTS_PER_PAGE);
+	return Array.from({ length: totalPages - 1 }, (_, i) => {
+		const page = i + 2;
+		return {
+			params: { page: String(page) },
+			props: { currentPage: page, totalPages },
+		};
+	});
+}
+
+const { currentPage, totalPages } = Astro.props;
 const allPosts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
-const totalPages = Math.ceil(allPosts.length / BLOG_POSTS_PER_PAGE);
-const currentPage = 1;
-const posts = allPosts.slice(0, BLOG_POSTS_PER_PAGE);
+const start = (currentPage - 1) * BLOG_POSTS_PER_PAGE;
+const posts = allPosts.slice(start, start + BLOG_POSTS_PER_PAGE);
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<BaseHead title={`Blog — Page ${currentPage} | ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
 		<style>
 			main {
 				width: 960px;

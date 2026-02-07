@@ -1,0 +1,51 @@
+---
+interface Props {
+	currentPage: number;
+	totalPages: number;
+}
+
+const { currentPage, totalPages } = Astro.props;
+
+const prevUrl = currentPage === 2 ? '/blog/' : `/blog/page/${currentPage - 1}/`;
+const nextUrl = `/blog/page/${currentPage + 1}/`;
+---
+
+{totalPages > 1 && (
+	<nav class="pagination" aria-label="Blog pagination">
+		{currentPage > 1 ? (
+			<a href={prevUrl}>← Previous</a>
+		) : (
+			<span aria-hidden="true"></span>
+		)}
+		<span class="current">Page {currentPage} of {totalPages}</span>
+		{currentPage < totalPages ? (
+			<a href={nextUrl}>Next →</a>
+		) : (
+			<span aria-hidden="true"></span>
+		)}
+	</nav>
+)}
+
+<style>
+	.pagination {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 1.5rem;
+		margin-top: 2rem;
+		padding-top: 2rem;
+		border-top: 1px solid rgb(var(--gray-light));
+		flex-wrap: wrap;
+	}
+	.pagination a {
+		color: var(--accent);
+		text-decoration: none;
+	}
+	.pagination a:hover {
+		text-decoration: underline;
+	}
+	.pagination .current {
+		color: rgb(var(--gray));
+		font-weight: 600;
+	}
+</style>

@@ -3,3 +3,5 @@
 
 export const SITE_TITLE = 'Batota';
 export const SITE_DESCRIPTION = 'A mix of programming, IT, and a long journey through bugs, errors, and bad decisions.';
+
+export const BLOG_POSTS_PER_PAGE = 5;
