@@ -1,4 +1,5 @@
 ---
+import { SpeedInsights } from '@vercel/speed-insights/astro';
 const today = new Date();
 ---
 
@@ -13,6 +14,7 @@ const today = new Date();
 		</a>
 	</div>
 </footer>
+<SpeedInsights />
 <style>
 	footer {
 		padding: 1.5em 1em 2em 1em;
