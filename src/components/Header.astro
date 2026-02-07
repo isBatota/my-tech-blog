@@ -1,6 +1,10 @@
 ---
 import { SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
+
+const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
+const pathSegments = pathname.split('/').filter(Boolean);
+const isBlogPost = pathSegments[0] === 'blog' && pathSegments.length > 1;
 ---
 
 <header>
@@ -8,8 +12,13 @@ import HeaderLink from './HeaderLink.astro';
 		<h2><a href="/">{SITE_TITLE}</a></h2>
 		<div class="internal-links">
 			<HeaderLink href="/">Home</HeaderLink>
-			<HeaderLink href="/blog">Blog</HeaderLink>
+			<span class="nav-blog">
+				<HeaderLink href="/blog">Blog</HeaderLink>
+				{isBlogPost && <span class="nav-sub" aria-hidden="true">└─ Post</span>}
+			</span>
 			<HeaderLink href="/about">About</HeaderLink>
+			<HeaderLink href="/contact">Contact</HeaderLink>
+			<HeaderLink href="/privacy">Privacy</HeaderLink>
 		</div>
 		<div class="social-links">
 			<a href="https://m.webtoo.ls/@astro" target="_blank">
@@ -72,6 +81,22 @@ import HeaderLink from './HeaderLink.astro';
 	nav a.active {
 		text-decoration: none;
 		border-bottom-color: var(--accent);
+	}
+	.internal-links {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 0.25em;
+	}
+	.nav-blog {
+		display: inline-flex;
+		align-items: baseline;
+		gap: 0.25em;
+	}
+	.nav-sub {
+		font-size: 0.9em;
+		color: rgb(var(--gray));
+		white-space: nowrap;
 	}
 	.social-links,
 	.social-links a {
